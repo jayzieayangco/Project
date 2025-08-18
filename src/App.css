@@ -1,1 +1,20 @@
 @import 'tailwindcss';
+
+@font-face {
+  font-family: 'Knewave';
+  src: url('../src/assets/fonts/Knewave-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Overpass';
+  src: url('../src/assets/fonts/Overpass-VariableFont_wght.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@theme{
+  --font-knewave: Knewave, cursive;
+  --font-overpass: Overpass, sans-serif;
+}
