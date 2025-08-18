@@ -8,13 +8,14 @@ export default function Login() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-      <span>Welcome to the Login Page.</span>
+    <div className="flex flex-col items-center justify-center h-screen bg-[#faf5ef] gap-8">
+      <span className="font-knewave text-8xl">DAILY TIME</span>      
+      <span className="font-knewave text-8xl">REPORT</span>
       <button
         onClick={() => navigateTo("/dashboard")}
-        className="p-2 rounded-lg border-1 border-blue- bg-blue-500 text-white hover:bg-transparent hover:text-blue-500 transition-colors duration-300 cursor-pointer"
+        className="font-overpass p-2 rounded-lg border-1 border-blue- bg-green-500 text-white hover:bg-transparent hover:text-blue-500 transition-colors duration-300 cursor-pointer"
       >
-        Proceed to dashbaord here.
+        LOG IN
       </button>
     </div>
   );
