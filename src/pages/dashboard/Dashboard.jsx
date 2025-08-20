@@ -32,7 +32,7 @@ export default function Dashboard() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="font-overpass px-2 py-2 text-xl rounded-lg border-1 border-blue bg-green-500 text-white font-bold hover:text-white-500 transition-colors duration-300"
+          className="font-overpass px-2 py-2 text-xl rounded-lg border-1 border-blue bg-green-600 text-white font-bold hover:text-white-500 transition-colors duration-300"
         />
 
         <br/>
@@ -43,7 +43,7 @@ export default function Dashboard() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="font-overpass p-2 text-xl rounded-lg border-1 border-blue- bg-green-500 text-white font-bold hover:text-white-500 transition-colors duration-300"
+          className="font-overpass p-2 text-xl rounded-lg border-1 border-blue- bg-green-600 text-white font-bold hover:text-white-500 transition-colors duration-300"
         />
       </div>
     </div>
