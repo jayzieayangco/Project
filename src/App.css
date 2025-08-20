@@ -18,3 +18,16 @@
   --font-knewave: Knewave, cursive;
   --font-overpass: Overpass, sans-serif;
 }
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgb(64, 170, 64);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background-color: rgb(255, 255, 255);
+}
