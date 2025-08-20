@@ -1,66 +1,30 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
+import useEditFunction from "./editFunction";
 
 export default function Records() {
-  const [records, setRecords] = useState([]);
-
   const navigate = useNavigate();
-  const handleReturn = () => {
-    navigate("/");
-  };
+  const handleReturn = () => navigate("/");
 
-  const handleTimeIn = () => {
-    const now = new Date();
-    setRecords([
-      ...records,
-      {
-        id: Date.now(),
-        timeIn: now,
-        timeOut: null,
-        totalHours: null,
-        activity: "",
-      },
-    ]);
-  };
+  const {
+    records,
+    isEditing,
+    handleTimeIn,
+    handleTimeOut,
+    handleActivityChange,
+    handleManualTimeChange,
+    toggleEditing,
+  } = useEditFunction();
 
-  const handleTimeOut = () => {
-    const now = new Date();
-    setRecords((prev) => {
-      const updated = [...prev];
-      for (let i = updated.length - 1; i >= 0; i--) {
-        if (!updated[i].timeOut) {
-          const diffMs = now.getTime() - updated[i].timeIn.getTime();
-          const diffHours = (diffMs / (1000 * 60 * 60)).toFixed(2);
-          updated[i] = {
-            ...updated[i],
-            timeOut: now,
-            totalHours: diffHours,
-          };
-          break;
-        }
-      }
-      return updated;
-    });
-  };
-
-  const handleActivityChange = (id, value) => {
-    setRecords((prev) =>
-      prev.map((record) =>
-        record.id === id ? { ...record, activity: value } : record
-      )
-    );
-  };
-
-  const formatTime = (time) => (time ? time.toLocaleTimeString() : "-");
+  const formatTime = (time) =>
+    time instanceof Date
+      ? time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+      : "-";
 
   return (
-    <div className="h-screen overflow-y-auto w-full flex flex-col items-center bg-[#faf5ef] p-8">
-
-      <div className="w-full max-w-5xl">
-        <div
-          className="overflow-y-auto custom-scrollbar"
-          style={{ maxHeight: "455px" }} 
-        >
+    <div className="h-screen overflow-hidden w-full flex flex-col items-center bg-[#faf5ef] p-8">
+      <div className="w-full max-w-5xl mb-32">
+        <div className="overflow-y-auto custom-scrollbar" style={{ maxHeight: "455px" }}>
           <table className="table-auto border-collapse w-full shadow-lg">
             <thead className="sticky top-0 z-10 bg-green-600 text-white">
               <tr>
@@ -70,12 +34,11 @@ export default function Records() {
                 <th className="px-6 py-3 border">Activity</th>
               </tr>
             </thead>
-
             <tbody>
               {records.length === 0 ? (
                 <tr>
                   <td colSpan="4" className="text-center py-4 text-gray-500">
-                    No records yet
+                    No records
                   </td>
                 </tr>
               ) : (
@@ -89,10 +52,40 @@ export default function Records() {
                     }
                   >
                     <td className="px-6 py-3 border">
-                      {formatTime(record.timeIn)}
+                      {isEditing ? (
+                        <input
+                          type="time"
+                          value={
+                            record.timeIn
+                              ? record.timeIn.toTimeString().slice(0, 5)
+                              : ""
+                          }
+                          onChange={(e) =>
+                            handleManualTimeChange(record.id, "timeIn", e.target.value)
+                          }
+                          className="border rounded p-1 w-full"
+                        />
+                      ) : (
+                        formatTime(record.timeIn)
+                      )}
                     </td>
                     <td className="px-6 py-3 border">
-                      {formatTime(record.timeOut)}
+                      {isEditing ? (
+                        <input
+                          type="time"
+                          value={
+                            record.timeOut
+                              ? record.timeOut.toTimeString().slice(0, 5)
+                              : ""
+                          }
+                          onChange={(e) =>
+                            handleManualTimeChange(record.id, "timeOut", e.target.value)
+                          }
+                          className="border rounded p-1 w-full"
+                        />
+                      ) : (
+                        formatTime(record.timeOut)
+                      )}
                     </td>
                     <td className="px-6 py-3 border">
                       {record.totalHours ?? "-"}
@@ -116,30 +109,39 @@ export default function Records() {
         </div>
       </div>
 
-      <div className="fixed bottom-6 mt-50 flex justify-center space-x-3">
+      <div className="fixed bottom-6 left-0 right-0 flex justify-center space-x-3 z-20">
+        {!isEditing && (
+          <>
+            <button
+              onClick={handleTimeIn}
+              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+            >
+              Time In
+            </button>
+            <button
+              onClick={handleTimeOut}
+              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+            >
+              Time Out
+            </button>
+          </>
+        )}
         <button
-          onClick={handleTimeIn}
+          onClick={toggleEditing}
           className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
         >
-          Time In
+          {isEditing ? "Done" : "Edit"}
         </button>
-        <button
-          onClick={handleTimeOut}
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
-        >
-          Time Out
-        </button>
-        <button className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors">
-          Edit
-        </button>
+      </div>
 
+      {!isEditing && (
         <button
           onClick={handleReturn}
-          className="fixed right-6 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+          className="fixed bottom-6 right-6 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors z-30"
         >
           Go Back
         </button>
-      </div>
+      )}
     </div>
   );
 }
