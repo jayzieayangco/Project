@@ -6,15 +6,18 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./pages/login/Login";
 import Records from "./pages/records/Records";
 import Register from "./pages/login/Register";
+import AuthGuard from "./pages/Authguard";
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/records" element={<Records />} />
-        <Route path="/register" element={<Register/>} />
-      </Routes>
+      <AuthGuard>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/records" element={<Records />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </AuthGuard>
     </BrowserRouter>
   );
 }
