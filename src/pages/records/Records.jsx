@@ -18,7 +18,7 @@ export default function Records() {
     if (!response) return;
 
     navigate("/");
-  }
+  };
 
   const [records, setRecords] = useState([]); // assuming array of records
   const [isEditing, setIsEditing] = useState(false);
@@ -104,6 +104,15 @@ export default function Records() {
     });
   };
 
+  function formatDate(date) {
+    return new Date(date).toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }
+
   return (
     <div className="h-screen overflow-hidden w-full flex flex-col items-center bg-[#faf5ef] p-8">
       <div className="w-full max-w-5xl mb-32">
@@ -114,6 +123,7 @@ export default function Records() {
           <table className="table-auto border-collapse w-full shadow-lg">
             <thead className="sticky top-0 z-10 bg-green-600 text-white">
               <tr>
+                <th className="px-6 py-3 border">Date</th>
                 <th className="px-6 py-3 border">Time In</th>
                 <th className="px-6 py-3 border">Time Out</th>
                 <th className="px-6 py-3 border">Total Hours</th>
@@ -137,6 +147,9 @@ export default function Records() {
                         : "bg-gray-50 text-center"
                     }
                   >
+                    <td className="px-6 py-3 border">
+                      {formatDate(record.dtr_date)}
+                    </td>
                     <td className="px-6 py-3 border">
                       {record.dtr_time_in
                         ? formatTime(record.dtr_time_in)
