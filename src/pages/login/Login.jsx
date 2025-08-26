@@ -25,8 +25,8 @@ export default function Login() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-left h-max bg-[#faf5ef]">
-      <div className="flex flex-col items-center justify-center p-30">
+    <div className="flex flex-col items-center justify-left h-screen bg-[#faf5ef]">
+      <div className="flex flex-col items-center justify-center p-25">
         <span className="font-knewave text-8xl">DAILY TIME</span>
         <br />
         <span className="font-knewave text-8xl">RECORD</span>
@@ -53,11 +53,12 @@ export default function Login() {
           className="font-overpass p-2 text-xl rounded-lg border-1 border-blue- bg-green-600 text-white font-bold hover:text-white-500 transition-colors duration-300"
         />
 
-        <button type="submit" className={`${button}`}>
+        <button type="submit" className="fixed top-6 right-28 font-overpass bg-green-600 text-white px-2 py-2 rounded-lg hover:bg-green-700 transition disabled:opacity-50">
           Login
         </button>
       </form>
-      <button onClick={() => navigateTo("/register")} className={`${button}`}>
+      <button 
+      onClick={() => navigateTo("/register")} className={`${button}`}>
         Register
       </button>
     </div>
@@ -65,4 +66,4 @@ export default function Login() {
 }
 
 export const button =
-  "font-overpass w-[200px] bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition disabled:opacity-50";
+  "fixed top-6 right-6 font-overpass px-2 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition disabled:opacity-50";
