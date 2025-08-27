@@ -42,7 +42,7 @@ export default function Login() {
           placeholder="Email:"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="font-overpass px-2 py-2 text-xl rounded-lg border-1 border-blue bg-green-600 text-white font-bold hover:text-white-500 transition-colors duration-300"
+          className="font-overpass w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         <input
           required
@@ -50,10 +50,10 @@ export default function Login() {
           placeholder="Password:"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="font-overpass p-2 text-xl rounded-lg border-1 border-blue- bg-green-600 text-white font-bold hover:text-white-500 transition-colors duration-300"
+          className="font-overpass w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
-        <button type="submit" className="fixed top-6 right-28 font-overpass bg-green-600 text-white px-2 py-2 rounded-lg hover:bg-green-700 transition disabled:opacity-50">
+        <button type="submit" className="fixed top-6 right-28 font-overpass bg-green-600 text-white px-4.5 py-2 rounded-lg hover:bg-green-700 transition disabled:opacity-50">
           Login
         </button>
       </form>
