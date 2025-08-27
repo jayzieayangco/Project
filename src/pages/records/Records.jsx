@@ -19,7 +19,7 @@ export default function Records() {
     navigate("/");
   };
 
-  const [records, setRecords] = useState([]); // assuming array of records
+  const [records, setRecords] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
 
   const loadTimeRecords = useCallback(async () => {
@@ -61,9 +61,9 @@ export default function Records() {
     // your logic here
   };
 
-  const toggleEditing = () => {
-    setIsEditing((prev) => !prev);
-  };
+  // const toggleEditing = () => {
+  //   setIsEditing((prev) => !prev);
+  // };
 
   function handleTimeTotal(timeIn, timeOut) {
     const formattedTimeIn = new Date(timeIn);
@@ -92,7 +92,6 @@ export default function Records() {
   const formatTime = (time) => {
     if (!time) return "-";
 
-    // Remove microseconds if present (e.g., ".287206")
     const cleanedTime = time.replace(/\.\d{6}/, "");
 
     const date = new Date(cleanedTime);
@@ -119,7 +118,7 @@ export default function Records() {
       <div className="w-full max-w-5xl mb-32">
         <div
           className="overflow-y-auto custom-scrollbar"
-          style={{ maxHeight: "455px" }}
+          style={{ maxHeight: "620px" }}
         >
           <table className="table-auto border-collapse w-full shadow-lg">
             <thead className="sticky top-0 z-10 bg-green-600 text-white">
@@ -200,12 +199,12 @@ export default function Records() {
             </button>
           </>
         )}
-        <button
+        {/* <button
           onClick={toggleEditing}
           className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
         >
           {isEditing ? "Done" : "Edit"}
-        </button>
+        </button> */}
       </div>
 
       {!isEditing && (
