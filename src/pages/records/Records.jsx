@@ -7,6 +7,7 @@ import {
   supabaseLogOut,
   updateTimeOut,
 } from "./Service";
+import supabase from "../../supabase/supabase-client";
 import toast from "react-hot-toast";
 
 export default function Records() {
@@ -18,91 +19,65 @@ export default function Records() {
 
     navigate("/");
   };
-
   const [records, setRecords] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
 
   const loadTimeRecords = useCallback(async () => {
     const response = await fetchTimeRecords();
-
     if (!response) return;
-
     setRecords(response);
-    toast.success("Fetched records successfully.");
   }, []);
 
   useEffect(() => {
     loadTimeRecords();
-  }, []);
+  }, [loadTimeRecords]);
 
   async function handleTimeIn() {
     const response = await addTimeIn();
-
     if (!response) return;
-
     loadTimeRecords();
   }
 
   async function handleTimeOut() {
     const response = await updateTimeOut();
-
     if (!response) return;
-
     loadTimeRecords();
   }
 
   const handleActivityChange = (id, newActivity) => {
     setRecords((prev) =>
-      prev.map((r) => (r.dtr_id === id ? { ...r, actvity: newActivity } : r))
+      prev.map((r) => (r.dtr_id === id ? { ...r, activities: newActivity } : r))
     );
   };
 
-  const handleManualTimeChange = (id, timeField, newValue) => {
-    // your logic here
+  const handleSubmit = async (id) => {
+    const record = records.find((r) => r.dtr_id === id);
+    if (!record) return;
+
+    const { error } = await supabase
+      .from("daily_time_record")
+      .update({ activities: record.activities }) 
+      .eq("dtr_id", id);
+
+    if (error) {
+      console.error("Error updating record:", error.message);
+      toast.error("Failed to update activity");
+    } else {
+      toast.success("Activity updated successfully!");
+    }
   };
 
-  // const toggleEditing = () => {
-  //   setIsEditing((prev) => !prev);
-  // };
-
-  function handleTimeTotal(timeIn, timeOut) {
-    const formattedTimeIn = new Date(timeIn);
-    const formattedTimeOut = new Date(timeOut);
-
-    if (isNaN(formattedTimeIn) || isNaN(formattedTimeOut)) {
-      return "Invalid time";
-    }
-
-    const timeTotal = formattedTimeOut - formattedTimeIn;
-    const formattedTimeTotal = timeTotal / (1000 * 60 * 60);
-
-    return formattedTimeTotal.toFixed(2);
-  }
-
-  // const {
-  //   records,
-  //   isEditing,
-  //   handleTimeIn,
-  //   handleTimeOut,
-  //   handleActivityChange,
-  //   handleManualTimeChange,
-  //   toggleEditing,
-  // } = useEditFunction();
-
-  const formatTime = (time) => {
-    if (!time) return "-";
-
+  function formatTime(time) {
+    if (!time) return "--:--";
     const cleanedTime = time.replace(/\.\d{6}/, "");
-
     const date = new Date(cleanedTime);
-    if (isNaN(date)) return "Invalid time";
-
+    if (isNaN(date)) return "Invalid";
     return date.toLocaleTimeString("en-GB", {
       hour: "2-digit",
       minute: "2-digit",
       hour12: false,
     });
-  };
+  }
 
   function formatDate(date) {
     return new Date(date).toLocaleDateString("en-US", {
@@ -113,12 +88,21 @@ export default function Records() {
     });
   }
 
+  function handleTimeTotal(timeIn, timeOut) {
+    const formattedTimeIn = new Date(timeIn);
+    const formattedTimeOut = new Date(timeOut);
+    if (isNaN(formattedTimeIn) || isNaN(formattedTimeOut)) return "-";
+    const timeTotal = formattedTimeOut - formattedTimeIn;
+    return (timeTotal / (1000 * 60 * 60)).toFixed(2);
+  }
+
   return (
-    <div className="h-screen overflow-hidden w-full flex flex-col items-center bg-[#faf5ef] p-8">
-      <div className="w-full max-w-5xl mb-32">
+    <div className="h-screen overflow-hidden w-full flex flex-col items-center bg-[#faf5ef] p-6">
+      <div className="fixed w-full max-w-5xl">
+
         <div
           className="overflow-y-auto custom-scrollbar"
-          style={{ maxHeight: "620px" }}
+          style={{ maxHeight: "486px" }}
         >
           <table className="table-auto border-collapse w-full shadow-lg">
             <thead className="sticky top-0 z-10 bg-green-600 text-white">
@@ -128,12 +112,13 @@ export default function Records() {
                 <th className="px-6 py-3 border">Time Out</th>
                 <th className="px-6 py-3 border">Total Hours</th>
                 <th className="px-6 py-3 border">Activity</th>
+                <th className="px-6 py-3 border">Save</th>
               </tr>
             </thead>
             <tbody>
               {records.length === 0 ? (
                 <tr>
-                  <td colSpan="4" className="text-center py-4 text-gray-500">
+                  <td colSpan="6" className="text-center py-4 text-gray-500">
                     No records
                   </td>
                 </tr>
@@ -151,28 +136,33 @@ export default function Records() {
                       {formatDate(record.dtr_date)}
                     </td>
                     <td className="px-6 py-3 border">
-                      {record.dtr_time_in
-                        ? formatTime(record.dtr_time_in)
-                        : "--:--"}
+                      {formatTime(record.dtr_time_in)}
                     </td>
                     <td className="px-6 py-3 border">
-                      {record.dtr_time_out
-                        ? formatTime(record.dtr_time_out)
-                        : "--:--"}
+                      {formatTime(record.dtr_time_out)}
                     </td>
                     <td className="px-6 py-3 border">
-                      {handleTimeTotal(record.dtr_time_in, record.dtr_time_out)}
+                      {handleTimeTotal(
+                        record.dtr_time_in,
+                        record.dtr_time_out
+                      )}
                     </td>
                     <td className="px-6 py-3 border">
-                      <input
-                        type="text"
-                        value={record.activity}
+                      <textarea
+                        value={record.activities || ""} 
                         onChange={(e) =>
-                          handleActivityChange(record.id, e.target.value)
+                          handleActivityChange(record.dtr_id, e.target.value)
                         }
-                        className="border rounded p-1 w-full"
-                        placeholder=""
+                        className="border rounded p-1 w-full resize-none"
                       />
+                    </td>
+                    <td className="px-6 py-3 border">
+                      <button
+                        onClick={() => handleSubmit(record.dtr_id)}
+                        className="bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700"
+                      >
+                        Save
+                      </button>
                     </td>
                   </tr>
                 ))
@@ -180,41 +170,31 @@ export default function Records() {
             </tbody>
           </table>
         </div>
-      </div>
 
-      <div className="fixed bottom-6 left-0 right-0 flex justify-center space-x-3 z-20">
-        {!isEditing && (
-          <>
+        <div className="flex fixed justify-center p-4">
+          <div className="space-x-4">
             <button
               onClick={handleTimeIn}
-              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+              className="fixed left-130 bg-green-600 text-white px-4 py-2 rounded hover:bg-blue-700"
             >
               Time In
             </button>
             <button
               onClick={handleTimeOut}
-              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+              className="fixed left-160 bg-green-600 text-white px-4 py-2 rounded hover:bg-red-700"
             >
               Time Out
             </button>
-          </>
-        )}
-        {/* <button
-          onClick={toggleEditing}
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
-        >
-          {isEditing ? "Done" : "Edit"}
-        </button> */}
-      </div>
+          </div>
+          <button
+            onClick={handleReturn}
+            className="bg-green-600 fixed bottom-6 right-6 text-white px-4 py-2 rounded hover:bg-green-700"
+          >
+            Log Out
+          </button>
+        </div>
 
-      {!isEditing && (
-        <button
-          onClick={handleReturn}
-          className="fixed bottom-6 right-6 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors z-30"
-        >
-          Go Back
-        </button>
-      )}
+      </div>
     </div>
   );
 }
