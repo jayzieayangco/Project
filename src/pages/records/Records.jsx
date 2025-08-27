@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import useEditFunction from "./editFunction";
 import { useCallback, useEffect, useState } from "react";
 import {
   addTimeIn,
@@ -53,7 +52,9 @@ export default function Records() {
   }
 
   const handleActivityChange = (id, newActivity) => {
-    // your logic here
+    setRecords((prev) =>
+      prev.map((r) => (r.dtr_id === id ? { ...r, actvity: newActivity } : r))
+    );
   };
 
   const handleManualTimeChange = (id, timeField, newValue) => {
