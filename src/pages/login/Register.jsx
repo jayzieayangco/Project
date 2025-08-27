@@ -1,12 +1,14 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../../supabase/supabase-client"; 
 
 export default function Register() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  
   const handleRegister = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -35,25 +37,28 @@ export default function Register() {
 
       if (insertError) {
         console.error(insertError.message);
-        setMessage("Registered!");
+        setMessage("Registered, but failed to save extra user data.");
         setLoading(false);
         return;
       }
     }
 
-    setMessage("Check your email.");
+    setMessage("Check your email to confirm your account.");
     setEmail("");
     setPassword("");
-    setShowRegister(false);
     setLoading(false);
+
+    // ✅ After successful register, go back to login
+    navigate("/login");
   };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-[#faf5ef] p-8 rounded-2xl shadow-xl w-96 relative">
+        
         <button
           className="absolute top-2 right-3 text-gray-500 hover:text-black text-2xl"
-          onClick={() => setShowRegister(false)}
+          onClick={() => navigate("/")}
         >
           &times;
         </button>
