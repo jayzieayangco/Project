@@ -8,7 +8,7 @@ export async function fetchTimeRecords() {
     const { data, error } = await supabase
       .from("daily_time_record")
       .select("*")
-      .eq("user_id", userId)
+        .eq("user_id", userId)
       .order("dtr_date", { ascending: false });
 
     if (error) throw error;
