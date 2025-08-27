@@ -8,7 +8,7 @@ export async function fetchTimeRecords() {
     const { data, error } = await supabase
       .from("daily_time_record")
       .select("*")
-        .eq("user_id", userId)
+      .eq("user_id", userId)
       .order("dtr_date", { ascending: false });
 
     if (error) throw error;
@@ -101,6 +101,7 @@ export async function checkForTimeRecord() {
   try {
     let doesTimeInExist = false;
     let doesTimeOutExist = false;
+    const userId = await fetchCurrentUserId();
 
     const now = new Date();
     const formattedDate = now.toLocaleDateString("en-CA");
@@ -108,7 +109,8 @@ export async function checkForTimeRecord() {
     const { data, error } = await supabase
       .from("daily_time_record")
       .select("*")
-      .eq("dtr_date", formattedDate);
+      .eq("dtr_date", formattedDate)
+      .eq("user_id", userId);
 
     if (error) throw error;
 
@@ -116,7 +118,7 @@ export async function checkForTimeRecord() {
       doesTimeInExist = true;
     }
 
-    if (!(data.dtr_time_out === null)) {
+    if (data[0]?.dtr_time_out) {
       doesTimeOutExist = true;
     }
 
