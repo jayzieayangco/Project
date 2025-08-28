@@ -98,11 +98,11 @@ export default function Records() {
 
   return (
     <div className="h-screen overflow-hidden w-full flex flex-col items-center bg-[#faf5ef] p-6">
-      <div className="fixed w-full max-w-5xl">
+      <div className="w-full max-w-5xl">
 
         <div
           className="overflow-y-auto custom-scrollbar"
-          style={{ maxHeight: "486px" }}
+          style={{ maxHeight: "620px" }}
         >
           <table className="table-auto border-collapse w-full shadow-lg">
             <thead className="sticky top-0 z-10 bg-green-600 text-white">
@@ -171,30 +171,33 @@ export default function Records() {
           </table>
         </div>
 
-        <div className="flex fixed justify-center p-4">
-          <div className="space-x-4">
+        {/* <div className="flex fixed justify-center p-4"> */}
+          <div className="fixed bottom-6 left-0 right-0 flex justify-center space-x-3 z-20">
             <button
               onClick={handleTimeIn}
-              className="fixed left-130 bg-green-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
             >
               Time In
             </button>
             <button
               onClick={handleTimeOut}
-              className="fixed left-160 bg-green-600 text-white px-4 py-2 rounded hover:bg-red-700"
+              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-red-700 transition-colors"
             >
               Time Out
             </button>
           </div>
-          <button
-            onClick={handleReturn}
-            className="bg-green-600 fixed bottom-6 right-6 text-white px-4 py-2 rounded hover:bg-green-700"
-          >
-            Log Out
-          </button>
+      {!isEditing && (
+        <button
+          onClick={handleReturn}
+          className="fixed bottom-6 right-6 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors z-30"
+        >
+          Go Back
+        </button>
+      )}
         </div>
 
+
       </div>
-    </div>
+    // </div>
   );
 }
