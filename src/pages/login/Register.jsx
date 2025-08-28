@@ -30,7 +30,7 @@ export default function Register() {
     if (user) {
       const { error: insertError } = await supabase.from("users").insert([
         {
-          id: user.id,
+          user_id: user.id,
           email: user.email,
         },
       ]);
@@ -49,7 +49,7 @@ export default function Register() {
     setLoading(false);
 
     // ✅ After successful register, go back to login
-    navigate("/login");
+    navigate("/");
   };
 
   return (

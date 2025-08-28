@@ -175,7 +175,7 @@ export default function Records() {
           <div className="fixed bottom-6 left-0 right-0 flex justify-center space-x-3 z-20">
             <button
               onClick={handleTimeIn}
-              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-blue-700 transition-colors"
             >
               Time In
             </button>
@@ -189,7 +189,7 @@ export default function Records() {
       {!isEditing && (
         <button
           onClick={handleReturn}
-          className="fixed bottom-6 right-6 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors z-30"
+          className="fixed bottom-6 right-6 px-4 py-2 bg-green-600 text-white rounded hover:bg-gray-700 transition-colors z-30"
         >
           Go Back
         </button>
